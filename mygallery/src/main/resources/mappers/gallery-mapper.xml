@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="galleryMapper">
+
+	<resultMap type="Gallery" id="resultGallery">
+			<id  property="img_num" column="img_num"  />
+			<result property="userid" column="userid" />
+			<result property="img_ori_name" column="img_ori_name" />
+			<result property="img_rename" column="img_rename" />
+			<result property="image_date" column="image_date" />
+	</resultMap>
+	
+	<resultMap type="Sticker" id="resultSticker">
+			<id  property="snum" column="snum"  />
+			<result property="userid" column="userid" />
+			<result property="s_ori_name" column="s_ori_name" />
+			<result property="s_rename" column="s_rename" />
+			<result property="s_date" column="s_date" />
+			<result property="category" column="category" />
+	</resultMap>
+	
+	<insert id="insertGallery" parameterType="Gallery">
+		insert into GALLERY
+		(IMG_NUM, USERID, IMG_ORI_NAME, IMG_RENAME, IMAGE_DATE) 
+		values (gallery_seq.nextval, 
+				#{userid}, 
+				#{img_ori_name}, 
+				#{img_rename}, 
+				sysdate)
+	</insert>
+
+	
+	<insert id="insertSticker" parameterType="Sticker">
+		insert into STICKER
+		(SNUM, USERID, S_ORI_NAME, S_RENAME, S_DATE, CATEGORY) 
+		values (sticker_seq.nextval, 
+				#{userid}, 
+				#{s_ori_name}, 
+				#{s_rename}, 
+				sysdate, 
+				#{category})
+	</insert>
+
+	<select id="selectImgAll" parameterType="String" resultMap="resultGallery">
+		select * from gallery where userid = #{userid} or userid= 'admin'
+	</select>
+	
+	<select id="selectStickerAll" parameterType="String" resultMap="resultSticker">
+		select * from sticker where userid = #{userid} or userid= 'admin'
+	</select>
+	
+	<delete id="deleteImg" parameterType="_int">
+		delete from GALLERY
+		where img_num = #{ img_num }
+	</delete>
+	
+	
+	<delete id="deleteStk" parameterType="_int">
+		delete from Sticker
+		where snum = #{ snum }
+	</delete>
+	
+<!-- 	
+	<select id="selectList" parameterType="Paging" resultMap="resultGallery">
+			<![CDATA[
+			select * from (select rownum rnum, img_num, userid, 
+							img_ori_name, img_rename, image_date from (select * from gallery
+							order by img_num desc)) where rnum >= #{ startRow } and rnum <= #{ endRow }
+			]]>
+	</select>
+	
+	<select id="getListCount" resultType="_int">
+		select count(*) from gallery
+	</select> -->
+	
+	
+
+</mapper>
