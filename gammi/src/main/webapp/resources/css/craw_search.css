@@ -1,0 +1,21 @@
+
+.craw_recipe{
+   display: flex;
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+.craw_img{
+	width: 300px;
+	height: 300px;
+}
+.overdiv {
+	width: 300px; 
+	text-overflow: ellipsis; 
+	white-space: nowrap; 
+	overflow: hidden;
+}
+.model {
+	margin : 0px 30px 0px 30px;
+}

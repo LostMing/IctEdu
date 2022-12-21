@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC
+"-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="cacheEnabled" value="false"/>
+	</settings>
+
+	<typeAliases>		
+		<typeAlias type="com.andamiro.gammi.gammigroup.vo.GammiGroup" alias="GammiGroup" />
+		<typeAlias type="com.andamiro.gammi.gammigroup.vo.GroupMember" alias="GroupMember" />
+		<typeAlias type="com.andamiro.gammi.member.vo.Member" alias="Member" />
+		<typeAlias type="com.andamiro.gammi.recipe.vo.Recipe" alias="Recipe" />
+		<typeAlias type="com.andamiro.gammi.common.SearchDate" alias="SearchDate" />
+		<typeAlias type="com.andamiro.gammi.common.Paging" alias="Paging" />
+		<typeAlias type="com.andamiro.gammi.common.SearchPaging" alias="SearchPaging" />
+		<typeAlias type="com.andamiro.gammi.notice.vo.Notice" alias="Notice" />
+		<typeAlias type="com.andamiro.gammi.board.vo.Board" alias="Board" />
+		<typeAlias type="com.andamiro.gammi.board.vo.BoardReply" alias="BoardReply" />
+		<typeAlias type="com.andamiro.gammi.search.foodinfo.vo.Foodinfo" alias="Foodinfo" />
+		<typeAlias type="com.andamiro.gammi.gammigroupgal.vo.GammiGroupGal" alias="GammiGroupGal" />
+		<typeAlias type="com.andamiro.gammi.gammigroupgal.vo.GalleryImg" alias="GalleryImg" />
+		<typeAlias type="com.andamiro.gammi.gammigroupgal.vo.GammiGroupGalReply" alias="GammiGroupGalReply" />
+		<typeAlias type="com.andamiro.gammi.chatting.vo.ChatRoom" alias="ChatRoom" />
+		<typeAlias type="com.andamiro.gammi.chatting.vo.ChatMessage" alias="ChatMessage" />
+		<typeAlias type="com.andamiro.gammi.chatting.vo.ChatRoomJoin" alias="ChatRoomJoin" />
+		<typeAlias type="com.andamiro.gammi.calendar.vo.GammiCalendar" alias="GammiCalendar" />
+		<typeAlias type="com.andamiro.gammi.news.vo.News" alias="News" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappers/calendar-mapper.xml" />
+		<mapper resource="mappers/news-mapper.xml" />
+		<mapper resource="mappers/board-mapper.xml" />
+		<mapper resource="mappers/boardreply-mapper.xml" />
+		<mapper resource="mappers/group-mapper.xml" />
+		<mapper resource="mappers/member-mapper.xml" />
+		<mapper resource="mappers/recipe-mapper.xml" />
+		<mapper resource="mappers/notice-mapper.xml" />
+		<mapper resource="mappers/foodinfo-mapper.xml" />
+		<mapper resource="mappers/groupgal-mapper.xml" />
+		<mapper resource="mappers/groupgalreply-mapper.xml" />
+		<mapper resource="mappers/chat-mapper.xml" />
+	</mappers>
+</configuration>

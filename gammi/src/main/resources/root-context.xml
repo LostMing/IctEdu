@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components 
+	@gammidb_high?TNS_ADMIN=/Users/goseungjae/dbtools/Wallet_gammidb-->
+	<!-- DataSource 등록 -->	
+	<bean class="org.apache.commons.dbcp.BasicDataSource"
+		id="realDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<!-- <property name="url" value="jdbc:oracle:thin:@gammidb_high?TNS_ADMIN=/Users/goseungjae/dbtools/Wallet_gammidb" /> -->
+		<property name="url" value="jdbc:oracle:thin:@gammi2_high?TNS_ADMIN=C:\\devtools\\Wallet_gammi2" />
+	     <property name="username" value="ADMIN" />
+	     <property name="password" value="Gammiproject!1" />
+	</bean>
+	
+	
+	<bean id="dataSource"
+		class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="realDataSource" />
+		<property name="logFormatter">
+			<bean
+				class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+			<property name="loggingType" value="MULTI_LINE" />
+			<property name="sqlPrefix" value="[SQL] " />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Spring과 MyBatis 연동 설정 -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean"
+		id="sqlSession">
+		<property name="configLocation"
+			value="classpath:mybatis-config.xml" />		
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- dao 에서 사용할 MyBatis 객체 생성 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSession"></constructor-arg>
+	</bean>
+
+	<!-- 트랜잭션 관리 설정 -->
+	<bean
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		id="transactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- service 에서 필요한 시점에서 commit | rollback 이
+	구동되게 aop 설정 처리 -->	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true"
+				rollback-for="Exception" />
+			<tx:method name="insert*" rollback-for="Exception" />
+			<tx:method  name="update*" rollback-for="Exception" />
+			<tx:method  name="delete*" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- <aop:config proxy-target-class="true">
+		<aop:pointcut
+			expression="execution(* com.test.first..*Impl.*(..))"
+			id="serviceMethod" />
+		<aop:advisor advice-ref="txAdvice" id="transactionAdvisor"
+			pointcut-ref="serviceMethod" />
+	</aop:config> -->
+	
+	<!-- 이메일 인증  -->
+	<context:property-placeholder location="classpath:config/email.properties" />
+	
+	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="username" value="${email.account}" />
+		<property name="password" value="${email.password}" />
+		
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop> <!-- 2단계 본인인증 했으므로 true -->
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	<bean class="org.springframework.jdbc.support.SQLErrorCodes">
+		<property name="dataIntegrityViolationCodes">
+	        <value> 1400, 1722, 2291, 2292 </value>
+	    </property>
+	</bean>
+</beans>
+
+
+
+
+
